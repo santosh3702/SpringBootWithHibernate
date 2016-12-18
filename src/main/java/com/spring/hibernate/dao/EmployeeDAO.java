@@ -10,5 +10,8 @@ public interface EmployeeDAO {
 
 	public List<Employee> getAllEmployees();
 
-	public void deleteEmployee(Integer employeeId);
+	public void deleteEmployee(int employeeId);
+	
+	public String updateEmployee(Employee employee);
+
 }

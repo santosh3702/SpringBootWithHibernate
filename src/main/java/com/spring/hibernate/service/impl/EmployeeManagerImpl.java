@@ -32,9 +32,15 @@ public class EmployeeManagerImpl implements EmployeeManager {
 
 	@Override
 	@Transactional
-	public void deleteEmployee(Integer employeeId) {
+	public void deleteEmployee(int employeeId) {
 
 		employeeDAO.deleteEmployee(employeeId);
+	}
+
+	@Override
+	public String updateEmployee(Employee employee) {
+
+		return employeeDAO.updateEmployee(employee);
 	}
 
 }

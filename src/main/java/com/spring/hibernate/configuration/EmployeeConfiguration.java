@@ -9,12 +9,9 @@ import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.orm.hibernate4.HibernateTransactionManager;
 import org.springframework.orm.hibernate4.LocalSessionFactoryBuilder;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
-import com.spring.hibernate.dao.EmployeeDAO;
-import com.spring.hibernate.dao.impl.EmployeeDAOImpl;
 import com.spring.hibernate.pojo.Employee;
 
 @Configuration
@@ -42,27 +39,13 @@ public class EmployeeConfiguration {
 		return sessionBuilder.buildSessionFactory();
 	}
 
-	/*@Autowired
-	@Bean(name = "transactionManager")
-	public HibernateTransactionManager getTransactionManager(SessionFactory sessionFactory) {
-
-		HibernateTransactionManager transactionManager = new HibernateTransactionManager(sessionFactory);
-		return transactionManager;
-	}*/
-
-	@Autowired
-	@Bean(name = "employeeDAO")
-	public EmployeeDAO getUserDao(SessionFactory sessionFactory) {
-		
-		return new EmployeeDAOImpl(sessionFactory);
-	}
-
 	private Properties getHibernateProperties() {
 
 		Properties properties = new Properties();
 		properties.put("hibernate.show_sql", "true");
 		properties.put("hibernate.dialect", "org.hibernate.dialect.MySQLDialect");
-		properties.put("hibernate.current_session_context_class", "thread");	
+		properties.put("hibernate.current_session_context_class", "thread");
+		properties.put("hibernate.hbm2ddl.auto", "update");
 		return properties;
 	}
 }

@@ -26,11 +26,6 @@ public class EmployeeDAOImpl implements EmployeeDAO {
 		super();
 	}
 
-	public EmployeeDAOImpl(SessionFactory sessionFactory) {
-		super();
-		this.sessionFactory = sessionFactory;
-	}
-
 	@Override
 	public void addEmployee(Employee employee) {
 
@@ -49,18 +44,60 @@ public class EmployeeDAOImpl implements EmployeeDAO {
 		if (StringUtils.isEmpty(session) || !session.isOpen()) {
 			session = getSession();
 		}
-		return session.createCriteria("from Employee").list();
-		// return this.sessionFactory.getCurrentSession().createQuery("from
-		// Employee").list();
+
+		return (List<Employee>) session.createCriteria(Employee.class).list();
 	}
 
 	@Override
-	public void deleteEmployee(Integer employeeId) {
+	public String updateEmployee(Employee employee) {
 
-		Employee employee = (Employee) sessionFactory.getCurrentSession().load(Employee.class, employeeId);
-		if (null != employee) {
-			this.sessionFactory.getCurrentSession().delete(employee);
+		String response = null;
+		if (StringUtils.isEmpty(session) || !session.isOpen()) {
+			session = getSession();
 		}
+		if (employee.getEmpId() > 0) {
+			Employee emp = (Employee) session.get(Employee.class, employee.getEmpId());
+			if (!StringUtils.isEmpty(emp)) {
+				if (!StringUtils.isEmpty(employee.getFirstname())) {
+					emp.setFirstname(employee.getFirstname());
+				}
+				if (!StringUtils.isEmpty(employee.getLastname())) {
+					emp.setLastname(employee.getLastname());
+				}
+				if (!StringUtils.isEmpty(employee.getEmail())) {
+					emp.setEmail(employee.getEmail());
+				}
+				if (!StringUtils.isEmpty(employee.getTelephone())) {
+					emp.setTelephone(employee.getTelephone());
+				}
+				try {
+					session.update(emp);
+					transaction.commit();
+					response = "Successfully Updated";
+				} catch (Exception e) {
+					response = "Exception generated...";
+					e.printStackTrace();
+				} finally {
+					session.close();
+				}
+			}
+		} else {
+			response = "No data exist for the given id";
+		}
+		return response;
+	}
+
+	@Override
+	public void deleteEmployee(int employeeId) {
+
+		if (StringUtils.isEmpty(session) || !session.isOpen()) {
+			session = getSession();
+		}
+		Employee emp = (Employee) session.get(Employee.class, employeeId);
+		System.out.println(emp);
+		session.delete(emp);
+		transaction.commit();
+		session.close();
 	}
 
 	private Session getSession() {

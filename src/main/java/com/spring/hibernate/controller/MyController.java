@@ -1,5 +1,7 @@
 package com.spring.hibernate.controller;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -24,5 +26,26 @@ public class MyController {
 		employee.setTelephone("8527701990");
 		employeeManager.addEmployee(employee);
 		return "Inserted Successfully";
+	}
+	
+	@RequestMapping("/deleteEmployee")
+	public void deleteEmployee(){
+		
+		employeeManager.deleteEmployee(2);
+	}
+	
+	@RequestMapping("/getEmployee")
+	public List<Employee> getEmployee(){
+		
+		return employeeManager.getAllEmployees();
+	}
+	
+	@RequestMapping("/updateEmployee")
+	public String updateEmployee(){
+		
+		Employee employee = new Employee();
+		employee.setEmpId(5);
+		employee.setEmail("aviral@gmail.com");
+		return employeeManager.updateEmployee(employee);
 	}
 }
