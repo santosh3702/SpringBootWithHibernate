@@ -13,5 +13,7 @@ public interface EmployeeManager {
 	public void deleteEmployee(int employeeId);
 	
 	public String updateEmployee(Employee employee);
+	
+	public Employee getAllEmployeesById(int employeeId);
 
 }

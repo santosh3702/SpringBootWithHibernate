@@ -43,4 +43,10 @@ public class EmployeeManagerImpl implements EmployeeManager {
 		return employeeDAO.updateEmployee(employee);
 	}
 
+	@Override
+	public Employee getAllEmployeesById(int employeeId) {
+		
+		return employeeDAO.getAllEmployeesById(employeeId);
+	}
+
 }

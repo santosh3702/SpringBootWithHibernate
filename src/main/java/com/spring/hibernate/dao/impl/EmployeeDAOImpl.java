@@ -106,4 +106,17 @@ public class EmployeeDAOImpl implements EmployeeDAO {
 		transaction = session.beginTransaction();
 		return session;
 	}
+
+	@Override
+	public Employee getAllEmployeesById(int employeeId) {
+		Employee employee = null;
+		if (StringUtils.isEmpty(session) || !session.isOpen()) {
+			session = getSession();
+		}
+		employee = (Employee) session.get(Employee.class, employeeId);
+		transaction.commit();
+		session.close();
+		System.out.println(employee.getLisOfAddresses().size()+ " " + "size of array");
+		return employee;
+	}
 }

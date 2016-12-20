@@ -14,4 +14,5 @@ public interface EmployeeDAO {
 	
 	public String updateEmployee(Employee employee);
 
+	public Employee getAllEmployeesById(int employeeId);
 }

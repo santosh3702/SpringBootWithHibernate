@@ -1,0 +1,532 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "description": "Provisioning Gateway Service is the entry point for the ARCADIA",
+        "version": "1.0",
+        "title": "ProvisioningGatewayService",
+        "termsOfService": "ProvisioningGatewayService"
+    },
+    "tags": [
+     
+        {
+            "name": "provisioning-gateway-rest-controller",
+            "description": "Provisioning Gateway Rest Controller"
+        }
+    ],
+    "paths": {
+     
+        "/provisioningGatewayService/submitPSRequest": {
+            "post": {
+                "tags": [
+                    "provisioning-gateway-rest-controller"
+                ],
+                "summary": "Submit Provisioning Request",
+                "description": "SubmitProvisioning performs all the validations on the incoming request. If validation is success proceeds to I&C ,else send error message to consumer ",
+                "operationId": "SubmitProvisioningJsonUsingPOST",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    { "in": "body",
+                    "name": "xmlbody",
+                    "description": "example of swagger with xml",
+                    "required": true,
+                    "schema": {
+                        "$ref": "#/definitions/myOuter"
+                    }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/SubmitProvisioningResponse"
+                        }
+                    },
+                    "201": {
+                        "description": "Created"
+                    },
+                    "400": {
+                        "description": "Invalid request",
+                        "schema": {
+                            "$ref": "#/definitions/ErrorResponse"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    },
+                    "404": {
+                        "description": "Not Found"
+                    },
+                    "500": {
+                        "description": "Error processing request",
+                        "schema": {
+                            "$ref": "#/definitions/ErrorResponse"
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "definitions": {"ErrorSummary": {
+            "type": "object",
+            "properties": {
+                "attribute": {
+                    "type": "string"
+                },
+                "errorCode": {
+                    "type": "string"
+                },
+                "errorMessage": {
+                    "type": "string"
+                }
+            }
+        },
+        "Address": {
+			"type": "object",
+			"properties": {
+				"careOfLine": {
+					"type": "string"
+				},
+				"city": {
+					"type": "string"
+				},
+				"country": {
+					"type": "string",
+					"enum": [
+						"US",
+						"CAN"
+					]
+				},
+				"county": {
+					"type": "string"
+				},
+				"locationID": {
+					"type": "string"
+				},
+				"poBoxNumber": {
+					"type": "string"
+				},
+				"province": {
+					"type": "string"
+				},
+				"state": {
+					"type": "string"
+				},
+				"streetAddress": {
+					"type": "string"
+				},
+				"streetAddress2": {
+					"type": "string"
+				},
+				"unitNumber": {
+					"type": "string"
+				},
+				"unitType": {
+					"type": "string"
+				},
+				"zip4Code": {
+					"type": "string"
+				},
+				"zipCode": {
+					"type": "string"
+				}
+			}
+		},
+        "SubmitProvisioningResponse": {
+            "type": "object",
+            "properties": {
+                "submitProvisioningResponseType": {
+                    "$ref": "#/definitions/ArrayOfSubmitProvisioningResponseType"
+                },
+                "submitProvisioningReturn": {
+                    "$ref": "#/definitions/SubmitProvisioningResponse"
+                }
+            }
+        },
+        "ArrayOfServiceConfigurations": {
+            "type": "object",
+            "properties": {
+                "serviceConfigurations": {
+                    "type": "array",
+                    "description": "This will hold various configuration of a service. From Harmony prospective, it will be ESRN(LocationID), PRON(County),IMSTEMPLATEID (will be 5 for VOIP). This is mandatory if its 1 Step Provisioning. For 2 Step Provisioning, its optional when sending equipment details.",
+                    "items": {
+                        "$ref": "#/definitions/ServiceConfiguration"
+                    }
+                }
+            }
+        },
+        "ArrayOfSubmitProvisioningResponseType": {
+            "type": "object",
+            "properties": {
+                "submitProvisioningResponseTypes": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/SubmitProvisioningResponseType"
+                    }
+                }
+            }
+        },
+        
+        "SubmitProvisioningResponseType": {
+            "type": "object",
+            "properties": {
+                "errorSummaryList": {
+                    "$ref": "#/definitions/ArrayOfErrorSummary"
+                },
+                "lineOfBusiness": {
+                    "type": "string",
+                    "enum": [
+                        "VO_IP",
+                        "WIFI"
+                    ]
+                },
+                "status": {
+                    "type": "string"
+                },
+                "tnStatusList": {
+                    "$ref": "#/definitions/ArrayOfTnStatus"
+                }
+            }
+        },
+        "SubmitProvisioning": {
+            "type": "object",
+			"xml": {
+				"attribute": true
+				},
+            "properties": {
+                "provisioningReqType": {
+                    "$ref": "#/definitions/SubmitProvisioningType"
+                }
+            }
+        },
+    
+        
+        "ArrayOfService": {
+            "type": "object",
+            "properties": {
+                "services": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/Service"
+                    }
+                }
+            }
+        },
+        "ArrayOfErrorSummary": {
+            "type": "object",
+            "properties": {
+                "errorSummaries": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/ErrorSummary"
+                    }
+                }
+            }
+        },
+        "ServiceConfiguration": {
+            "type": "object",
+            "properties": {
+                "action": {
+                    "type": "string",
+                    "enum": [
+                        "ADD",
+                        "DELETE",
+                        "MODIFY",
+                        "NO_CHANGE"
+                    ]
+                },
+                "configName": {
+                    "type": "string"
+                },
+                "configValue": {
+                    "type": "string"
+                }
+            }
+        },
+        "SubmitProvisioningType": {
+            "type": "object",
+			
+            "properties": {
+                "customerName": {
+                    "$ref": "#/definitions/PersonName"
+                },
+                "addressContact": {
+					"$ref": "#/definitions/AddressContact"
+				},
+                "provisioningAttributes": {
+                    "$ref": "#/definitions/ProvisioningAttributes"
+                },
+                "serviceList": {
+                    "$ref": "#/definitions/ArrayOfService"
+                }
+            }
+        },
+ 
+        
+        
+        "ProvisioningAttributes": {
+            "type": "object",
+            "description": "Attributes for provisioning",
+            "properties": {
+                "dwellingType": {
+                    "type": "string",
+                    "description": "Dwelling type is needed for backend to identify flow weather its Residential customer or a business customer. For ARCADIA, at this point it will be RESI",
+                    "enum": [
+                        "RESI",
+                        "BUS",
+                        "MDU",
+                        "TOPDOWN",
+                        "VIDEO"
+                    ]
+                },
+                "tenantAccountGUID": {
+                    "type": "string",
+                    "description": "TenantAccountGUID is unique identifier for each customer. "
+                },
+                "tenantId": {
+                    "type": "string",
+                    "description": "TenantID is for Comcast to identify which tenant is sending the request. From ARCADUA system, it will be ARCADIA"
+                },
+                 "id": {
+                    "type": "string"
+                },
+                "customerID": {
+					"type": "string"
+				},
+                "accountNumber": {
+					"type": "string"
+				}
+            }
+          
+        },
+        
+       "PersonName": {
+			"type": "object",
+			"properties": {
+				"displayName": {
+					"type": "string"
+				
+				
+				},
+				"firstName": {
+					"type": "string"
+				
+			
+				},
+				"lastName": {
+					"type": "string"
+				
+				},
+				"middleName": {
+					"type": "string"
+				
+				},
+				"suffix": {
+					"type": "string"
+					
+				},
+				"title": {
+					"type": "string"
+				
+				}
+			}
+		},
+        	"AddressContact": {
+			"type": "object",
+			"properties": {
+				"address": {
+					"$ref": "#/definitions/Address"
+				},
+				"addressType": {
+					"type": "string",
+					"enum": [
+						"HOME",
+						"WORK",
+						"RENTAL_UNIT",
+						"VACATION_HOME"
+					]
+				},
+				"businessContactType": {
+					"type": "string",
+					"enum": [
+						"TECHNICAL",
+						"BUSINESS"
+					]
+				},
+				"id": {
+					"type": "string"
+				}
+			}
+		},
+        
+        
+        "Service": {
+            "type": "object",
+            "description": "List of Services, it can be Add, Disconnect.",
+            "properties": {
+                "action": {
+                    "type": "string",
+                    "description": "Action Type, please refer enum; ADD - For Adding; CHANGE- For Merge, DELETE -For Delete",
+                    "enum": [
+                        "ADD",
+                        "DISCONNECT",
+                        "SEASONAL_RESUME",
+                        "CHANGE",
+                        "NOCHANGE",
+                        "SEASONAL_SUSPEND",
+                        "NONPAY_SUSPEND",
+                        "NONPAY_RESUME",
+                        "ADD_CANCEL",
+                        "DISCONNECT_CANCEL",
+                        "DISABLE",
+                        "RESTORE"
+                    ]
+                },
+                "deliveryPlatform": {
+                    "type": "string",
+                    "description": "delivery platform details for ex: IMS"
+                },
+                "lineOfBusiness": {
+                    "type": "string",
+                    "description": "Line of business describes the type of the service for ex VO_IP,WIFI",
+                    "enum": [
+                        "VO_IP",
+                        "WIFI"
+                    ]
+                },
+                "serviceConfigurationList": {
+                    "$ref": "#/definitions/ArrayOfServiceConfigurations"
+                }
+                
+                 
+            }
+         
+        },
+ 
+        "TnStatus": {
+            "type": "object",
+            "properties": {
+                "tn": {
+                    "type": "string"
+                },
+                "tnStatus": {
+                    "type": "string"
+                }
+            }
+        },
+        "ErrorResponse": {
+            "type": "object",
+            "properties": {
+                "code": {
+                    "type": "string"
+                },
+                "detailMap": {
+                    "type": "object"
+                },
+                "details": {
+                    "type": "object"
+                },
+                "id": {
+                    "type": "string"
+                },
+                "message": {
+                    "type": "string"
+                },
+                "timestamp": {
+                    "type": "integer",
+                    "format": "int64"
+                },
+                "type": {
+                    "type": "string"
+                },
+                "validationMessages": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                }
+            }
+        },
+        
+        "ArrayOfTnStatus": {
+            "type": "object",
+            "properties": {
+                "tnStatuses": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/TnStatus"
+                    }
+                }
+            }
+        }
+,        
+        "myOuter":{  
+      "type":"object",
+      "xml":{  
+         "name":"House"
+      },
+      "properties":{  
+         "class":{  
+            "type":"string",
+            "enum":[  
+               "singleFamily"
+            ],
+            "xml":{  
+               "attribute":true,
+               "prefix":"home"
+            }
+         },
+         "masterRoom":{  
+            "type":"object",
+            "properties":{  
+               "bed":{  
+                  "type":"string",
+                  "xml":{  
+                     "prefix":"master"
+                  }
+               },
+               "size":{  
+                  "type":"string",
+                  "enum":[  
+                     "XL"
+                  ],
+                  "xml":{  
+                     "attribute":true
+                  }
+               },
+               "color":{  
+                  "type":"string",
+                  "enum":[  
+                     "brown"
+                  ],
+                  "xml":{  
+                     "attribute":true,
+                     "name":"COLOR",
+                     "prefix":"paint"
+                  }
+               },
+               "window":{  
+                  "type":"string",
+                  "enum":[  
+                     "slide"
+                  ],
+                  "xml":{  
+                     "attribute":true,
+                     "name":"open",
+                     "prefix":"view",
+                     "namespace":"http://doesntShowUpDueToENUM.com"
+                  }
+               }
+            }
+         }
+      }
+   }
+        }
+}
