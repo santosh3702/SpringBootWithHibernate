@@ -44,6 +44,7 @@ public class EmployeeManagerImpl implements EmployeeManager {
 	}
 
 	@Override
+	@Transactional
 	public Employee getAllEmployeesById(int employeeId) {
 		
 		return employeeDAO.getAllEmployeesById(employeeId);

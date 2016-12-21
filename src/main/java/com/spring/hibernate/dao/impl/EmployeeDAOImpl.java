@@ -34,6 +34,7 @@ public class EmployeeDAOImpl implements EmployeeDAO {
 		}
 		System.out.println(transaction);
 		session.save(employee);
+//		session.save(employee.getAddress());
 		transaction.commit();
 		session.close();
 	}
@@ -114,9 +115,10 @@ public class EmployeeDAOImpl implements EmployeeDAO {
 			session = getSession();
 		}
 		employee = (Employee) session.get(Employee.class, employeeId);
+		
 		transaction.commit();
 		session.close();
-		System.out.println(employee.getLisOfAddresses().size()+ " " + "size of array");
+		//System.out.println(employee.getLisOfAddresses().size()+ " " + "size of array");
 		return employee;
 	}
 }

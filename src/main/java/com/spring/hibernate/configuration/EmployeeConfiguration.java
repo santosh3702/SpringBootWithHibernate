@@ -12,6 +12,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.orm.hibernate4.LocalSessionFactoryBuilder;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
+import com.spring.hibernate.pojo.Address;
 import com.spring.hibernate.pojo.Employee;
 
 @Configuration
@@ -23,7 +24,7 @@ public class EmployeeConfiguration {
 
 		BasicDataSource dataSource = new BasicDataSource();
 		dataSource.setDriverClassName("com.mysql.jdbc.Driver");
-		dataSource.setUrl("jdbc:mysql://localhost:3306/test");
+		dataSource.setUrl("jdbc:mysql://localhost:3306/testEmp");
 		dataSource.setUsername("root");
 		dataSource.setPassword("root");
 		return dataSource;
@@ -35,6 +36,7 @@ public class EmployeeConfiguration {
 
 		LocalSessionFactoryBuilder sessionBuilder = new LocalSessionFactoryBuilder(dataSource);
 		sessionBuilder.addAnnotatedClasses(Employee.class);
+		sessionBuilder.addAnnotatedClasses(Address.class);
 		sessionBuilder.addProperties(getHibernateProperties());
 		return sessionBuilder.buildSessionFactory();
 	}
@@ -45,7 +47,8 @@ public class EmployeeConfiguration {
 		properties.put("hibernate.show_sql", "true");
 		properties.put("hibernate.dialect", "org.hibernate.dialect.MySQLDialect");
 		properties.put("hibernate.current_session_context_class", "thread");
-		properties.put("hibernate.hbm2ddl.auto", "create");
+		properties.put("hibernate.format_sql", "true");
+		properties.put("hibernate.hbm2ddl.auto", "create-drop");
 		return properties;
 	}
 }
